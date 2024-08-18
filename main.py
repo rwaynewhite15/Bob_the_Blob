@@ -5,6 +5,18 @@ import highscore
 
 # Initialize Pygame
 pygame.init()
+pygame.mixer.init()
+
+# Load the background music and popping sound effect
+pygame.mixer.music.load("sound/theme.mp3")
+pop_sound = pygame.mixer.Sound("sound/pop.mp3")
+
+# Set the volume
+pygame.mixer.music.set_volume(0.5)  # Background music volume
+pop_sound.set_volume(0.7)  # Popping sound effect volume
+
+# Play the background music on loop
+pygame.mixer.music.play(-1)  # -1 means loop indefinitely
 
 # Screen dimensions
 screen_width = 1500

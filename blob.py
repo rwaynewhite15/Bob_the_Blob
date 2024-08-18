@@ -1,7 +1,6 @@
-# blob.py
-
 import pygame
 import random
+import main
 
 # Colors
 RED = (255, 0, 0)
@@ -98,6 +97,7 @@ def update_blobs(blobs, bob, score, screen_width, screen_height):
         # Check collision with Bob
         distance = ((bob.x - blob["x"]) ** 2 + (bob.y - blob["y"]) ** 2) ** 0.5
         if distance < bob.size + blob["size"]:
+            main.pop_sound.play()  # Play popping sound
             if bob.size > blob["size"]:
                 if blob["color"] == GREEN:
                     if bob.size <= min(screen_height, screen_width) // 4:
