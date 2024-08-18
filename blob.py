@@ -33,7 +33,7 @@ def generate_additional_blobs(blobs, bob, num_blobs, screen_width, screen_height
     for _ in range(num_blobs):
         placed = False
         for _ in range(100):  # Try up to 100 times to place a new blob
-            blob_size = random.randint(bob.size + 1, bob.size + 50)
+            blob_size = random.randint(1, bob.size + 50)
             blob_x = random.randint(0, screen_width - blob_size)
             blob_y = random.randint(0, screen_height - blob_size)
             color = random.choice([RED, GREEN, YELLOW])  # Include yellow blobs

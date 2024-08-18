@@ -23,6 +23,7 @@ def game_loop():
     player_bob = bob.Bob(screen_width // 2, screen_height // 2, 20, 5)
     score = 0
     game_over = False
+    last_blob_time = pygame.time.get_ticks() 
     
     # Main game loop
     while not game_over:
@@ -36,6 +37,13 @@ def game_loop():
 
         # Update blobs and check for game over
         score, game_over = blob.update_blobs(blobs_list, player_bob, score, screen_width, screen_height)
+
+        # Add new blob every 2 seconds if all blobs are larger than Bob
+        current_time = pygame.time.get_ticks()
+        if current_time - last_blob_time > 2000:
+            if all(blob["size"] >= player_bob.size for blob in blobs_list):
+                blob.generate_additional_blobs(blobs_list, player_bob, 1, screen_width, screen_height)
+                last_blob_time = current_time
 
         # Draw everything
         screen.fill((0, 0, 0))  # Clear the screen
