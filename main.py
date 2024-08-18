@@ -1,3 +1,4 @@
+import sys
 import pygame
 import blob
 import bob
@@ -154,7 +155,7 @@ def display_game_over(score, elapsed_time):
                     waiting_for_input = False
                 elif event.key == pygame.K_q:
                     pygame.quit()
-                    exit()
+                    sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
                     game_loop()  # Restart the game
