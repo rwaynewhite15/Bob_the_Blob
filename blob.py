@@ -33,7 +33,11 @@ def generate_additional_blobs(blobs, bob, num_blobs, screen_width, screen_height
     for _ in range(num_blobs):
         placed = False
         for _ in range(100):  # Try up to 100 times to place a new blob
-            blob_size = random.randint(1, bob.size + 50)
+            blob_size_min = max(10, bob.size - 50)
+            blob_size_max = min(bob.size + 100, screen_width, screen_height) // 2
+            if blob_size_min > blob_size_max:
+                continue
+            blob_size = random.randint(blob_size_min, blob_size_max)
             blob_x = random.randint(0, screen_width - blob_size)
             blob_y = random.randint(0, screen_height - blob_size)
             color = random.choice([RED, GREEN, YELLOW])  # Include yellow blobs
@@ -72,7 +76,16 @@ def can_fit_blob(blob_x, blob_y, blob_size, blobs, bob, screen_width, screen_hei
 def update_blobs(blobs, bob, score, screen_width, screen_height):
     new_score = score
     for blob in blobs[:]:
+        BLOB_ACCELERATION = .005
         # Update blob position
+        if blob["velocity_x"] > 0:
+            blob["velocity_x"] += BLOB_ACCELERATION
+        else:
+            blob["velocity_x"] -= BLOB_ACCELERATION
+        if blob["velocity_y"] > 0:
+            blob["velocity_y"] += BLOB_ACCELERATION
+        else:
+            blob["velocity_y"] -= BLOB_ACCELERATION
         blob["x"] += blob["velocity_x"]
         blob["y"] += blob["velocity_y"]
 
@@ -87,15 +100,17 @@ def update_blobs(blobs, bob, score, screen_width, screen_height):
         if distance < bob.size + blob["size"]:
             if bob.size > blob["size"]:
                 if blob["color"] == GREEN:
-                    bob.size += blob["size"] // 2  # Bob grows with green blobs
+                    if bob.size <= min(screen_height, screen_width) // 4:
+                        bob.size += blob["size"] // 2  # Bob grows with green blobs
                 elif blob["color"] == RED:
-                    bob.size = max(10, bob.size - blob["size"] // 2)  # Bob shrinks with red blobs
+                        bob.size = max(20, bob.size - blob["size"] // 2)  # Bob shrinks with red blobs
                 elif blob["color"] == YELLOW:
                     # Randomly grow or shrink Bob with yellow blobs
                     if random.choice([True, False]):
-                        bob.size += blob["size"] // 2
+                        if bob.size <= min(screen_height, screen_width) // 4:
+                            bob.size += blob["size"] // 2
                     else:
-                        bob.size = max(10, bob.size - blob["size"] // 2)
+                            bob.size = max(20, bob.size - blob["size"] // 2)
                 blobs.remove(blob)  # Remove the blob
                 new_score += 1  # Increase score
                 generate_additional_blobs(blobs, bob, 2, screen_width, screen_height)  # Generate new blobs
