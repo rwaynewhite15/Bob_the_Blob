@@ -7,6 +7,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 YELLOW = (255, 255, 0)  # Color for yellow blobs
 BLACK = (0, 0, 0)      # Color for text
+GREY = (128, 128, 128)
 
 def generate_initial_blobs(blobs, num_blobs, screen_width, screen_height):
     for _ in range(num_blobs):
@@ -14,7 +15,7 @@ def generate_initial_blobs(blobs, num_blobs, screen_width, screen_height):
             blob_size = random.randint(10, 40)
             blob_x = random.randint(0, screen_width - blob_size)
             blob_y = random.randint(0, screen_height - blob_size)
-            color = random.choice([RED, GREEN, YELLOW])
+            color = random.choice([RED, GREEN, YELLOW, GREY])
             velocity_x = random.uniform(-2, 2)
             velocity_y = random.uniform(-2, 2)
             
@@ -39,7 +40,7 @@ def generate_additional_blobs(blobs, bob, num_blobs, screen_width, screen_height
             blob_size = random.randint(blob_size_min, blob_size_max)
             blob_x = random.randint(0, screen_width - blob_size)
             blob_y = random.randint(0, screen_height - blob_size)
-            color = random.choice([RED, GREEN, YELLOW])  # Include yellow blobs
+            color = random.choice([RED, GREEN, YELLOW, GREY])  # Include yellow , grey blobs
             velocity_x = random.uniform(-2, 2)
             velocity_y = random.uniform(-2, 2)
             
@@ -76,6 +77,17 @@ def update_blobs(blobs, bob, score, screen_width, screen_height):
     new_score = score
     for blob in blobs[:]:
         BLOB_ACCELERATION = .005
+        GRAVITY_STRENGTH = 100
+        if blob["color"] == GREY:
+            # Calculate the direction of gravity force towards Bob
+            dx = bob.x - blob["x"]
+            dy = bob.y - blob["y"]
+            distance = max(1, (dx ** 2 + dy ** 2) ** 0.5)  # Prevent division by zero
+            gravity_force = bob.size * GRAVITY_STRENGTH / distance / 100
+            
+            # Update blob velocity to move towards Bob
+            blob["velocity_x"] += gravity_force * (dx / distance)
+            blob["velocity_y"] += gravity_force * (dy / distance)
         # Update blob position
         if blob["velocity_x"] > 0:
             blob["velocity_x"] += BLOB_ACCELERATION
