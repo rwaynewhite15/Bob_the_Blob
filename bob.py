@@ -1,13 +1,12 @@
 import pygame
 
-BLUE = (0, 0, 255)
-
 class Bob:
-    def __init__(self, x, y, size, speed):
+    def __init__(self, x, y, size, speed, color):
         self.x = x
         self.y = y
         self.size = size
         self.speed = speed
+        self.color = color
         self.use_mouse = True  # Flag to determine if mouse control is active
 
     def move(self, keys, screen_width, screen_height):
@@ -26,5 +25,5 @@ class Bob:
         self.x = mouse_x - self.size // 2
         self.y = mouse_y - self.size // 2
 
-    def draw(self, screen):
-        pygame.draw.circle(screen, BLUE, (self.x, self.y), self.size)
+    def draw(self, screen, color):
+        pygame.draw.circle(screen, color, (self.x, self.y), self.size)

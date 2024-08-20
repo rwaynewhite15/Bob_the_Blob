@@ -39,9 +39,9 @@ def format_time(time_in_seconds):
 def game_loop():
     # Create game objects
     blobs_list = []
-    blob.generate_initial_blobs(blobs_list, 10, screen_width, screen_height)
-    player_bob = bob.Bob(screen_width // 2, screen_height // 2, 20, 10)
     score = 0
+    blob.generate_initial_blobs(blobs_list, 10, screen_width, screen_height, score)
+    player_bob = bob.Bob(screen_width // 2, screen_height // 2, 20, 10,(0, 0, 255))
     game_over = False
     last_blob_time = start_time = pygame.time.get_ticks() 
      # Hide the cursor
@@ -72,7 +72,7 @@ def game_loop():
         current_time = pygame.time.get_ticks()
         if current_time - last_blob_time > 2000:
             if all(blob["size"] >= player_bob.size for blob in blobs_list):
-                blob.generate_additional_blobs(blobs_list, player_bob, 1, screen_width, screen_height)
+                blob.generate_additional_blobs(blobs_list, player_bob, 1, screen_width, screen_height, score)
                 last_blob_time = current_time
 
         # Calculate elapsed game time
@@ -80,8 +80,11 @@ def game_loop():
 
         # Draw everything
         screen.fill((0, 0, 0))  # Clear the screen
-        blob.draw_blobs(screen, blobs_list, player_bob)
-        player_bob.draw(screen)
+        blob.draw_blobs(screen, blobs_list)
+        bobcolor = (0,0,255)
+        if player_bob.size >= 200:
+            bobcolor = (255,255,255)
+        player_bob.draw(screen, bobcolor)
         # Draw Bob's size
         font = pygame.font.Font(None, 24)
         bob_size_text = font.render(f"{player_bob.size}", True, (0, 0, 0))
